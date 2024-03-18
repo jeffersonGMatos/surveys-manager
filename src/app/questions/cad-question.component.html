@@ -1,0 +1,50 @@
+  @if (questionsForm.controls.length > 0) {
+    @for(control of questionsForm.controls; track control; let index = $index) {
+      <form class="window-content window-padding flex-column gap-10" [formGroup]="control" >
+        <div class="text-right" >
+          <button mat-stroked-button color="warn" (click)="removeQuestion(index)">
+            <mat-icon>remove</mat-icon>
+            Remover
+          </button>
+        </div>
+
+        <mat-form-field appearance="outline" >
+          <mat-label>Pergunta</mat-label>
+          <textarea 
+            type="text" 
+            matInput 
+            maxlength="255" 
+            rows="3"
+            formControlName="description"
+            autofocus ></textarea>
+    
+          <mat-hint>e.g. Em qual candidato as eleições municipais você votaria?</mat-hint>
+          @if (control.get("description")!.hasError("required")) {
+            <mat-error>Crie a pergunta</mat-error>
+          }
+
+          @if (control.get("description")!.hasError("maxLength")) {
+            <mat-error>A pergunta deve ter no máximo 255 caracteres</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" >
+          <mat-label>Quantidade máxima de repostas permitidas</mat-label>
+          <input 
+            type="number" 
+            matInput
+            formControlName="selectionNumber"
+            autofocus />
+        </mat-form-field>
+      </form>
+    }
+  } @else {
+    <p class="text-center mat-small" >Nenhuma pergunta foi cadastrada</p>
+  }
+  
+  <div class="window-padding text-center">
+    <button mat-stroked-button color="primary" (click)="onClickAddQuestion()">
+      <mat-icon>add</mat-icon>
+      Criar uma pergunta
+    </button>
+  </div>

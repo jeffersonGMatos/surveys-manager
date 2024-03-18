@@ -1,0 +1,57 @@
+<div class="app-body flex-row x-center y-top">
+
+  <div class="default-size flex-column gap-18"> 
+    <form class="window-content window-padding flex-column gap-18" [formGroup]="surveyForm" (submit)="onSubmit($event)">
+      <div class="flex-row x-space-between" >
+        <button type="button" mat-button color="primary" >
+          <mat-icon>arrow_back</mat-icon>
+          Voltar
+        </button>
+      </div>
+
+
+      <div class="grid-2-1 gap-10" >
+        <mat-form-field appearance="outline" >
+          <mat-label>Nome da consulta</mat-label>
+          <input 
+            type="text" 
+            matInput 
+            maxlength="255" 
+            formControlName="name"
+            autofocus />
+    
+          <mat-hint>e.g. Consulta Eleitoral</mat-hint>
+          @if (name.hasError("required")) {
+            <mat-error>Crie um nome para consulta</mat-error>
+          }
+      
+          @if (name.hasError("maxLength")) {
+            <mat-error>O nome deve ter no máximo 255 caracteres.</mat-error>
+          }
+        </mat-form-field>
+    
+        <mat-form-field appearance="outline" >
+          <mat-label>Data de Expiração</mat-label>
+          <input 
+            matInput 
+            [matDatepicker]="picker1" 
+            formControlName="expirationDate" 
+            autocomplete="off" 
+            readonly />
+          <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+          <mat-datepicker #picker1 disabled="false" ></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <button type="submit" mat-flat-button color="primary" >
+        <mat-icon>save</mat-icon>
+        Salvar
+      </button>   
+    </form>
+
+    @if (surveyId.value) {
+      <app-cad-questions class="flex-column gap-18" [surveyId]="surveyId.value" ></app-cad-questions>
+    }
+  </div>
+  
+</div>

@@ -1,0 +1,27 @@
+.app-body {
+  height: 100%;
+}
+.app-side-nav {
+  background-color: var(--bg-container);
+  border-radius: 20px;
+  margin: 8px;
+  margin-right: 0;
+}
+
+.side-nav-list {
+  width: 200px;
+}
+
+.window-content {
+  background-color: var(--bg-container);
+  border-radius: 18px;
+  box-shadow: 0 0 10px rgba(0,0,0,.05);
+}
+
+.window-padding {
+  padding: 27px;
+}
+
+.default-size {
+  width: 800px;
+}

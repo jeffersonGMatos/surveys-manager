@@ -1,0 +1,10 @@
+.response-group {
+  border: solid #ccc 1px;
+  border-radius: 20px;
+  padding: 18px
+}
+
+.response-item {
+  display: grid;
+  grid-template-columns: auto min-content;
+}

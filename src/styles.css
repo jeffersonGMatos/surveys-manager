@@ -1,1 +1,52 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+  --bg-container: #ffffff;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-column{
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-row.x-center {
+  justify-content: center;
+}
+.flex-row.x-space-between {
+  justify-content: space-between;
+}
+
+.flex-row.y-center {
+  align-items: center;
+}
+.flex-row.y-top {
+  align-items: flex-start;
+}
+
+.gap-10 {
+  gap: 10px;
+}
+
+.gap-18 {
+  gap: 18px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.grid-2-1 {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 1;
+}
