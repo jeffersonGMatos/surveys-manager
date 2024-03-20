@@ -11,7 +11,6 @@ import { ActivatedRoute } from "@angular/router";
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { provideNativeDateAdapter } from "@angular/material/core";
 import { DatePipe } from "@angular/common";
-import { Survey } from "../home/survey";
 import { Question } from "./question";
 import { firstValueFrom } from "rxjs";
 
@@ -56,16 +55,18 @@ export class CadQuestionComponent {
   getQuestions() {
     this.surveyService
       .getQuestions(this.surveyId)
-      .subscribe(data => data.forEach(this.addQuestion))
+      .subscribe(data => data.forEach(item => this.addQuestion(item)));
   }
 
   addQuestion(question: Question) {
+    console.log(63, question);
     this.questionsForm.push(
       new FormGroup({
         questionId: new FormControl<string | null>(question.questionId),
         description: new FormControl<string>(question.description, [Validators.required, Validators.maxLength(255)]),
         selectionNumber: new FormControl<number>(question.selectionNumber, [Validators.required, Validators.min(1)]),
-        surveyId: new FormControl<string>(question.surveyId, [Validators.required])
+        surveyId: new FormControl<string>(question.surveyId, [Validators.required]),
+        question: new FormArray<FormControl>([])
       })
     )    
   }
@@ -88,10 +89,6 @@ export class CadQuestionComponent {
       this.addQuestion(question);
   }
 
-  ngOnInit() {
-    this.getQuestions()
-  }
-
   onSubmit(ev: SubmitEvent) {
     ev.preventDefault();
     /*
@@ -102,6 +99,10 @@ export class CadQuestionComponent {
       this.questions.controls.forEach(item => item.markAllAsTouched())
     }
     */
+  }
+
+  ngOnInit() {
+    this.getQuestions()
   }
 
 }

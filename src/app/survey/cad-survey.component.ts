@@ -8,7 +8,7 @@ import { MatInputModule } from "@angular/material/input";
 import { MatDividerModule } from "@angular/material/divider";
 import { SurveysService } from "../home/surveys.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { provideNativeDateAdapter } from "@angular/material/core";
 import { DatePipe } from "@angular/common";
 import { Survey } from "../home/survey";
@@ -83,10 +83,10 @@ export class CadSurveyComponent {
   }
 
   private async createSurvey(value: Survey) {
-    let response = await firstValueFrom(this.surveyService.createSurvey(value))
+    let survey = await firstValueFrom(this.surveyService.createSurvey(value))
 
-    if (response)
-      this.router.navigate([`surveys/${response.surveyId}`], {onSameUrlNavigation: "reload"});
+    if (survey)
+      this.router.navigate([`surveys/${survey.surveyId}`], {onSameUrlNavigation: "reload"});
   }
 
   private async saveSurvey() {
@@ -111,16 +111,10 @@ export class CadSurveyComponent {
     const id = this.route.snapshot.paramMap.get('id');
 
     if (id) {
-
       if (id === 'add')
-        this.setSurveyFormValue({
-          surveyId: null, 
-          expirationDate: new Date(), 
-          name: ''
-        })
+        this.setSurveyFormValue({ surveyId: null, expirationDate: new Date(), name: '' })
       else
         this.getSurvey(id)
-
     }
   }
 

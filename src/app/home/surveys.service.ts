@@ -40,7 +40,13 @@ export class SurveysService {
 
   public getQuestions(surveyId: string): Observable<Question[]> {
     return this._http.get<Question[]>(`${environment.api_host}/surveys/${surveyId}/questions`).pipe(
-      catchError(this.appService.handleError([]))
+      catchError(this.appService.handleError([])),
+      map(question =>
+        question.map(question => (
+          {...question, selectionNumber: Number(question.selectionNumber)}
+          )
+        )
+      )
     )
   }
 
@@ -54,9 +60,11 @@ export class SurveysService {
       expirationDate: `${data.expirationDate.getFullYear().toString()}-${(data.expirationDate.getMonth() + 1).toString().padStart(2, '0')}-${data.expirationDate.getDate().toString().padStart(2, '0')}`
     };
 
-    return this._http.post<Survey>(`${environment.api_host}/surveys`, survey, { headers }).pipe(
-      catchError(this.appService.handleError(undefined))
-    )
+    return this._http
+      .post<Survey>(`${environment.api_host}/surveys`, survey, {headers})
+      .pipe(
+        catchError(this.appService.handleError(undefined))
+      )
   }
 
   createQuestion(data: Question): Observable<Question | undefined> {
@@ -70,7 +78,8 @@ export class SurveysService {
     };
 
     return this._http.post<Question>(`${environment.api_host}/surveys/${data.surveyId}/questions`, question, { headers }).pipe(
-      catchError(this.appService.handleError(undefined))
+      catchError(this.appService.handleError(undefined)),
+      map(question => (question ? {...question, selectionNumber: Number(question.selectionNumber)} : undefined))
     )
   }
 
