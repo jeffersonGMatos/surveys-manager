@@ -3,4 +3,11 @@ export interface Question {
   description: string
   selectionNumber: number
   surveyId: string
+  options?: QuestionOption[]
+}
+
+export interface QuestionOption {
+  optionId: string
+  questionId: string
+  description: string
 }

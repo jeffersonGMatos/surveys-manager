@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable, catchError, map } from "rxjs";
 import { Survey } from "./survey";
 import { environment } from "../utils/config";
-import { Question } from "../questions/question";
+import { Question, QuestionOption } from "../questions/question";
 
 @Injectable({
   providedIn: 'root'
@@ -38,19 +38,7 @@ export class SurveysService {
     )
   }
 
-  public getQuestions(surveyId: string): Observable<Question[]> {
-    return this._http.get<Question[]>(`${environment.api_host}/surveys/${surveyId}/questions`).pipe(
-      catchError(this.appService.handleError([])),
-      map(question =>
-        question.map(question => (
-          {...question, selectionNumber: Number(question.selectionNumber)}
-          )
-        )
-      )
-    )
-  }
-
-  createSurvey(data: Survey): Observable<Survey | undefined> {
+  public createSurvey(data: Survey): Observable<Survey | undefined> {
     let headers = new HttpHeaders({
       "Content-type": 'application/json'
     });
@@ -67,7 +55,7 @@ export class SurveysService {
       )
   }
 
-  createQuestion(data: Question): Observable<Question | undefined> {
+  public createQuestion(data: Question): Observable<Question | undefined> {
     let headers = new HttpHeaders({
       "Content-type": 'application/json'
     });
@@ -83,7 +71,23 @@ export class SurveysService {
     )
   }
 
-  updateSurvey(data: Survey): Observable<Survey | undefined> {
+  public createQuestionOption(data: QuestionOption): Observable<QuestionOption | undefined> {
+    let headers = new HttpHeaders({
+      "Content-type": 'application/json'
+    });
+
+    const option = {
+      questionId: data.questionId,
+      description: data.description,
+    };
+
+    return this._http.post<QuestionOption>(`${environment.api_host}/questions/${option.questionId}/options`, option, { headers }).pipe(
+      catchError(this.appService.handleError(undefined)),
+      map(option => (option ? option : undefined))
+    )
+  }
+
+  public updateSurvey(data: Survey): Observable<Survey | undefined> {
     let headers = new HttpHeaders({
       "Content-type": 'application/json'
     });
@@ -98,4 +102,52 @@ export class SurveysService {
     )
   }
 
+  public updateQuestion(data: Question): Observable<Question | undefined> {
+    let headers = new HttpHeaders({
+      "Content-type": 'application/json'
+    });
+
+    const question = {
+      description: data.description,
+      selectionNumber: Number(data.selectionNumber),
+      options: data.options || []
+    };
+
+    return this._http.put<Question>(`${environment.api_host}/questions/${data.questionId}`, question, { headers }).pipe(
+      catchError(this.appService.handleError(undefined))
+    )
+  }
+
+  public deleteQuestion(questionId: string): Observable<boolean> {
+    let headers = new HttpHeaders({
+      "Content-type": 'application/json'
+    });
+
+    return this._http.delete<Question>(`${environment.api_host}/questions/${questionId}`, { headers }).pipe(
+      catchError(this.appService.handleError(false)),
+      map(response => response !== false ? true : false)
+    )
+  }
+
+  public deleteSurvey(surveyId: string): Observable<boolean> {
+    let headers = new HttpHeaders({
+      "Content-type": 'application/json'
+    });
+
+    return this._http.delete<Question>(`${environment.api_host}/surveys/${surveyId}`, { headers }).pipe(
+      catchError(this.appService.handleError(false)),
+      map(response => response !== false ? true : false)
+    )
+  }
+
+  public deleteQuestionOption(optionId: string): Observable<boolean> {
+    let headers = new HttpHeaders({
+      "Content-type": 'application/json'
+    });
+
+    return this._http.delete<Question>(`${environment.api_host}/options/${optionId}`, { headers }).pipe(
+      catchError(this.appService.handleError(false)),
+      map(response => response !== false ? true : false)
+    )
+  }
 }

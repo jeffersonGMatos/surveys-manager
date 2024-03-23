@@ -2,7 +2,7 @@
     @for(control of questionsForm.controls; track control; let index = $index) {
       <form class="window-content window-padding flex-column gap-10" [formGroup]="control" >
         <div class="text-right" >
-          <button mat-stroked-button color="warn" (click)="removeQuestion(index)">
+          <button mat-stroked-button color="warn" (click)="removeQuestion(control.get('questionId')!.value, index)">
             <mat-icon>remove</mat-icon>
             Remover
           </button>
@@ -15,10 +15,9 @@
             matInput 
             maxlength="255" 
             rows="3"
+            placeholder="e.g. Em qual candidato as eleições municipais você votaria?"
             formControlName="description"
             autofocus ></textarea>
-    
-          <mat-hint>e.g. Em qual candidato as eleições municipais você votaria?</mat-hint>
           @if (control.get("description")!.hasError("required")) {
             <mat-error>Crie a pergunta</mat-error>
           }
@@ -36,6 +35,48 @@
             formControlName="selectionNumber"
             autofocus />
         </mat-form-field>
+
+
+        @if (control.get('options')) {
+        <div>
+          <div class="response-group flex-column">
+            @if (asFormArray(control.get('options'))!.controls.length > 0) {
+              @for(response of asFormArray(control.get('options')).controls; track response; let i = $index) {
+                <div class="response-item gap-10" >
+                  <mat-form-field appearance="outline" >
+                    <mat-label>Alternativa {{i + 1}}</mat-label>
+                    <input 
+                      type="text" 
+                      matInput
+                      maxlength="255"
+                      [formControl]="asFormControl(response.get('description'))"
+                      autofocus
+                      required />
+                    @if (response.get('description')!.hasError('required')) {
+                      <mat-error>Informe a opção ou remova a mesma</mat-error>
+                    }
+                  </mat-form-field>
+
+                  <button mat-stroked-button color="warn" (click)="removeOption(asFormControl(response.get('optionId')).value, index, i)" >
+                    <mat-icon>remove</mat-icon>
+                    Remover
+                  </button>
+                </div>
+                
+              }
+            } @else {
+              <p class="text-center mat-small" >Nenhuma alternativa foi cadastrada</p>
+            }
+
+            <div class="text-center" >
+              <button mat-stroked-button color="primary" (click)="addResponse(control)">
+                <mat-icon>add</mat-icon>
+                Criar Alternativa
+              </button>
+            </div>
+          </div>
+        </div>
+        }
       </form>
     }
   } @else {
@@ -43,8 +84,8 @@
   }
   
   <div class="window-padding text-center">
-    <button mat-stroked-button color="primary" (click)="onClickAddQuestion()">
+    <button mat-flat-button color="primary" (click)="onClickAddQuestion()">
       <mat-icon>add</mat-icon>
-      Criar uma pergunta
+      Adicionar uma pergunta
     </button>
   </div>

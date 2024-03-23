@@ -3,26 +3,32 @@
   <div class="default-size flex-column gap-18"> 
     <form class="window-content window-padding flex-column gap-18" [formGroup]="surveyForm" (submit)="onSubmit($event)">
       <div class="flex-row x-space-between" >
-        <button type="button" mat-button color="primary" >
+        <button type="button" mat-button color="primary" (click)="back()" >
           <mat-icon>arrow_back</mat-icon>
           Voltar
         </button>
-      </div>
 
+        @if (surveyId.value) {
+          <button mat-flat-button color="warn" type="button" (click)="deleteSurvey()" >
+            <mat-icon>delete</mat-icon>
+            Excluir Questionário
+          </button>
+        }
+      </div>
 
       <div class="grid-2-1 gap-10" >
         <mat-form-field appearance="outline" >
-          <mat-label>Nome da consulta</mat-label>
+          <mat-label>Nome do questionário</mat-label>
           <input 
             type="text" 
             matInput 
             maxlength="255" 
             formControlName="name"
-            autofocus />
-    
-          <mat-hint>e.g. Consulta Eleitoral</mat-hint>
+            autofocus
+            placeholder="e.g. Consulta Eleitoral 2024" />
+
           @if (name.hasError("required")) {
-            <mat-error>Crie um nome para consulta</mat-error>
+            <mat-error>Crie um nome para o questionário</mat-error>
           }
       
           @if (name.hasError("maxLength")) {
@@ -43,16 +49,20 @@
         </mat-form-field>
       </div>
 
+      <div>
+        <mat-slide-toggle formControlName="isActive" >Questionário ativo</mat-slide-toggle>
+      </div>
+
       @if (!surveyId.value) {
         <button type="submit" mat-flat-button color="primary" >
           <mat-icon>save</mat-icon>
-          Salvar
+          Criar Questionário
         </button>
       }
     </form>
 
     @if (surveyId.value) {
-      <app-cad-questions class="flex-column gap-18" [surveyId]="surveyId.value" ></app-cad-questions>
+      <app-cad-questions class="flex-column gap-18" [surveyId]="surveyId.value" [questions]="questions" ></app-cad-questions>
     }
   </div>
   

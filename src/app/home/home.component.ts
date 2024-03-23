@@ -1,11 +1,12 @@
 import { DatePipe } from "@angular/common";
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTableModule } from "@angular/material/table";
 import { SurveysService } from "./surveys.service";
 import { Survey } from "./survey";
 import { Router } from "@angular/router";
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -19,8 +20,8 @@ import { Router } from "@angular/router";
   templateUrl: './home.component.html',
   styleUrls: ['../screen.css', './home.component.css']
 })
-export class HomeComponent  {
-  displayedColumns: string[] = ['description', 'expireAt', 'surveyId'];
+export class HomeComponent implements OnInit {
+  displayedColumns: string[] = ['name', 'expirationDate', 'isActive', 'surveyId'];
   data: Survey[] = [];
   isSearching = false;
 
@@ -33,7 +34,11 @@ export class HomeComponent  {
     this.router.navigate([`surveys/${id}`])
   }
 
-  getSurveys() {
-    this.surveysService.getSurveys().subscribe(data => this.data = data)
+  async getSurveys() {
+    this.data = await firstValueFrom(this.surveysService.getSurveys());
+  }
+
+  ngOnInit() {
+    Promise.resolve(this.getSurveys());
   }
 }

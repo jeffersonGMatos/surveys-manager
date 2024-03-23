@@ -8,11 +8,11 @@ import { MatInputModule } from "@angular/material/input";
 import { MatDividerModule } from "@angular/material/divider";
 import { SurveysService } from "../home/surveys.service";
 import { ActivatedRoute } from "@angular/router";
-import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { provideNativeDateAdapter } from "@angular/material/core";
 import { DatePipe } from "@angular/common";
 import { Question } from "./question";
-import { firstValueFrom } from "rxjs";
+import { debounceTime, distinctUntilChanged, firstValueFrom } from "rxjs";
 
 @Component({
   selector: "app-cad-questions",
@@ -34,6 +34,7 @@ import { firstValueFrom } from "rxjs";
 })
 export class CadQuestionComponent {
   @Input() surveyId!: string;
+  @Input() questions!: Question[];
   
   isLoading = true;
   questionsForm = new FormArray<FormGroup>([], Validators.minLength(1))
@@ -52,28 +53,67 @@ export class CadQuestionComponent {
   }
   */
 
+  /*
   getQuestions() {
     this.surveyService
       .getQuestions(this.surveyId)
       .subscribe(data => data.forEach(item => this.addQuestion(item)));
   }
+  */
+
+  private createFormListener(form: FormGroup) {
+    form.valueChanges
+    .pipe(
+      debounceTime(500),
+      distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))
+    )
+    .subscribe(value => {
+      this.surveyService.updateQuestion(value as any).subscribe(response => console.log(response));
+    })
+  }
 
   addQuestion(question: Question) {
-    console.log(63, question);
-    this.questionsForm.push(
-      new FormGroup({
-        questionId: new FormControl<string | null>(question.questionId),
-        description: new FormControl<string>(question.description, [Validators.required, Validators.maxLength(255)]),
-        selectionNumber: new FormControl<number>(question.selectionNumber, [Validators.required, Validators.min(1)]),
-        surveyId: new FormControl<string>(question.surveyId, [Validators.required]),
-        question: new FormArray<FormControl>([])
-      })
-    )    
+    let form = new FormGroup({
+      questionId: new FormControl<string | null>(question.questionId),
+      description: new FormControl<string>(question.description, [Validators.required, Validators.maxLength(255)]),
+      selectionNumber: new FormControl<number>(question.selectionNumber, [Validators.required, Validators.min(1)]),
+      surveyId: new FormControl<string>(question.surveyId, [Validators.required]),
+      options: new FormArray<FormGroup>((question.options || [])
+        .map(option => {
+          return new FormGroup({
+            questionId: new FormControl<string>(option.questionId),
+            optionId: new FormControl<string>(option.optionId),
+            description: new FormControl<string>(option.description)
+          })
+        })
+      )
+    });
+
+    this.createFormListener(form);
+    this.questionsForm.push(form)    
   }
 
-  removeQuestion(index: number) {
-    //this.questions.removeAt(index)   
+  asFormArray(control: AbstractControl | null): FormArray {
+    return control as FormArray;
   }
+
+  asFormControl(control: AbstractControl | null): FormControl {
+    return control as FormControl;
+  }
+
+
+  async removeQuestion(questionId: string, index: number) {
+    const deleted = await firstValueFrom(this.surveyService.deleteQuestion(questionId));
+    if (deleted)
+      this.questionsForm.removeAt(index);
+  }
+
+  async removeOption(optionId: string, questionIndex: number, optionIndex: number) {
+    const deleted = await firstValueFrom(this.surveyService.deleteQuestionOption(optionId));
+    if (deleted)
+      (this.questionsForm.at(questionIndex).get('options') as FormArray).removeAt(optionIndex);
+  }
+  
 
   async onClickAddQuestion() {
     const question = await firstValueFrom(
@@ -89,20 +129,36 @@ export class CadQuestionComponent {
       this.addQuestion(question);
   }
 
-  onSubmit(ev: SubmitEvent) {
-    ev.preventDefault();
-    /*
-    if (this.surveyForm.valid)
-      this.saveSurvey()
-    else {
-      this.surveyForm.markAllAsTouched();
-      this.questions.controls.forEach(item => item.markAllAsTouched())
+  addResponse(questionForm: AbstractControl | null) {
+    if (questionForm) {
+      let questionFormResponse = questionForm.get('options') as FormArray;
+      let questionId: string = questionForm.get('questionId')?.value;
+
+      if (questionFormResponse && questionId) {
+        this.surveyService.createQuestionOption({
+          optionId: '',
+          description: '', 
+          questionId,
+        })
+        .subscribe(response => {
+          if (response) {
+            console.log(response);
+            let form =  new FormGroup({
+              questionId: new FormControl(response.questionId),
+              optionId: new FormControl(response.optionId),
+              description: new FormControl(response.description)
+            });
+
+            questionFormResponse.push(form)
+          }          
+        })
+      }
     }
-    */
+    
   }
 
   ngOnInit() {
-    this.getQuestions()
+    this.questions.forEach(item => this.addQuestion(item))
   }
 
 }

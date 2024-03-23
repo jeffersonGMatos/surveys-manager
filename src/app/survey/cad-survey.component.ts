@@ -14,6 +14,7 @@ import { DatePipe } from "@angular/common";
 import { Survey } from "../home/survey";
 import { firstValueFrom } from "rxjs";
 import { CadQuestionComponent } from "../questions/cad-question.component";
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 @Component({
   templateUrl: 'cad-survey.component.html',
@@ -30,7 +31,8 @@ import { CadQuestionComponent } from "../questions/cad-question.component";
     MatCardModule,
     DatePipe,
     MatDividerModule,
-    CadQuestionComponent
+    CadQuestionComponent,
+    MatSlideToggleModule
   ]
 })
 export class CadSurveyComponent {
@@ -39,8 +41,11 @@ export class CadSurveyComponent {
   surveyForm = new FormGroup({
     surveyId: new FormControl<string | null>(null),
     name: new FormControl('', [Validators.required, Validators.maxLength(255)]),
-    expirationDate: new FormControl<Date>(new Date(), Validators.required)
+    expirationDate: new FormControl<Date>(new Date(), Validators.required),
+    isActive: new FormControl(false)
   })
+
+  questions: any[] = []
 
   get expirationDate(): FormControl<Date> {
     return this.surveyForm.get('expirationDate') as FormControl<Date>
@@ -62,6 +67,7 @@ export class CadSurveyComponent {
 
   private async getSurvey(surveyId: string) {
     const survey = await firstValueFrom(this.surveyService.getSurvey(surveyId))
+    
     if (survey)
       this.setSurveyFormValue(survey);
   }
@@ -70,8 +76,11 @@ export class CadSurveyComponent {
     this.surveyForm.reset({
       surveyId: survey.surveyId,
       name: survey.name,
-      expirationDate: survey.expirationDate
+      expirationDate: survey.expirationDate,
+      isActive: survey.isActive == 'S'
     });
+
+    this.questions = survey.questions || [];
 
     this.isLoading = false;
   }
@@ -93,9 +102,30 @@ export class CadSurveyComponent {
     const value = this.surveyForm.value;
 
     if (value.surveyId)
-      this.updateSurvey(value as Survey);
+      this.updateSurvey({
+        expirationDate: value.expirationDate,
+        isActive: value.isActive ? 'S' : 'N',
+        name: value.name,
+        surveyId: value.surveyId
+      } as Survey);
     else
-      this.createSurvey(value as Survey);
+      this.createSurvey({
+        expirationDate: value.expirationDate,
+        isActive: value.isActive ? 'S' : 'N',
+        name: value.name,
+        surveyId: value.surveyId
+      } as Survey);
+  }
+
+  async deleteSurvey() {
+    if (this.surveyId.value) {
+      await firstValueFrom(this.surveyService.deleteSurvey(this.surveyId.value))
+      this.back();
+    }
+  }
+
+  back() {
+    this.router.navigate([''])
   }
 
   onSubmit(ev: SubmitEvent) {
@@ -108,14 +138,21 @@ export class CadSurveyComponent {
   }
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
+    this.route.paramMap.subscribe(paramAsMap => {
+      const id = paramAsMap.get('id');
 
-    if (id) {
-      if (id === 'add')
-        this.setSurveyFormValue({ surveyId: null, expirationDate: new Date(), name: '' })
-      else
-        this.getSurvey(id)
-    }
+      if (id) {
+        if (id === 'add')
+          this.setSurveyFormValue({
+            surveyId: null,
+            expirationDate: new Date(),
+            name: '',
+            isActive: 'N'
+          })
+        else
+          this.getSurvey(id)
+      }
+    })    
   }
 
 }
