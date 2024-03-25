@@ -12,9 +12,10 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angula
 import { provideNativeDateAdapter } from "@angular/material/core";
 import { DatePipe } from "@angular/common";
 import { Survey } from "../home/survey";
-import { firstValueFrom } from "rxjs";
+import { debounceTime, distinctUntilChanged, firstValueFrom } from "rxjs";
 import { CadQuestionComponent } from "../questions/cad-question.component";
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @Component({
   templateUrl: 'cad-survey.component.html',
@@ -32,7 +33,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     DatePipe,
     MatDividerModule,
     CadQuestionComponent,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatProgressSpinnerModule
   ]
 })
 export class CadSurveyComponent {
@@ -81,8 +83,20 @@ export class CadSurveyComponent {
     });
 
     this.questions = survey.questions || [];
-
     this.isLoading = false;
+
+    if (this.surveyId.value) {
+      this.surveyForm.valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr))
+      )
+      .subscribe(() => {
+        if (this.surveyId) {
+          this.saveSurvey()
+        }
+      })
+    }
   }
 
   private async updateSurvey(value: Survey) {
@@ -150,9 +164,9 @@ export class CadSurveyComponent {
             isActive: 'N'
           })
         else
-          this.getSurvey(id)
+          this.getSurvey(id);
       }
-    })    
+    });
   }
 
 }

@@ -13,6 +13,7 @@ import { provideNativeDateAdapter } from "@angular/material/core";
 import { DatePipe } from "@angular/common";
 import { Question } from "./question";
 import { debounceTime, distinctUntilChanged, firstValueFrom } from "rxjs";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 @Component({
   selector: "app-cad-questions",
@@ -29,13 +30,14 @@ import { debounceTime, distinctUntilChanged, firstValueFrom } from "rxjs";
     ReactiveFormsModule,
     MatCardModule,
     DatePipe,
-    MatDividerModule
+    MatDividerModule,
+    MatProgressSpinnerModule
   ]
 })
 export class CadQuestionComponent {
   @Input() surveyId!: string;
   @Input() questions!: Question[];
-  
+  isLoadingQuestionOption = false;
   isLoading = true;
   questionsForm = new FormArray<FormGroup>([], Validators.minLength(1))
 
@@ -103,9 +105,12 @@ export class CadQuestionComponent {
 
 
   async removeQuestion(questionId: string, index: number) {
+    this.isLoadingQuestionOption = true;
     const deleted = await firstValueFrom(this.surveyService.deleteQuestion(questionId));
     if (deleted)
       this.questionsForm.removeAt(index);
+
+    setTimeout(() => this.isLoadingQuestionOption = false, 0)
   }
 
   async removeOption(optionId: string, questionIndex: number, optionIndex: number) {
@@ -130,6 +135,8 @@ export class CadQuestionComponent {
   }
 
   addResponse(questionForm: AbstractControl | null) {
+    this.isLoadingQuestionOption = true;
+
     if (questionForm) {
       let questionFormResponse = questionForm.get('options') as FormArray;
       let questionId: string = questionForm.get('questionId')?.value;
@@ -142,14 +149,14 @@ export class CadQuestionComponent {
         })
         .subscribe(response => {
           if (response) {
-            console.log(response);
             let form =  new FormGroup({
               questionId: new FormControl(response.questionId),
               optionId: new FormControl(response.optionId),
               description: new FormControl(response.description)
             });
 
-            questionFormResponse.push(form)
+            questionFormResponse.push(form);
+            this.isLoadingQuestionOption = false;
           }          
         })
       }

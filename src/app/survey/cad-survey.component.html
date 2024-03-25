@@ -16,48 +16,54 @@
         }
       </div>
 
-      <div class="grid-2-1 gap-10" >
-        <mat-form-field appearance="outline" >
-          <mat-label>Nome do questionário</mat-label>
-          <input 
-            type="text" 
-            matInput 
-            maxlength="255" 
-            formControlName="name"
-            autofocus
-            placeholder="e.g. Consulta Eleitoral 2024" />
+      @if (isLoading) {
+        <div class="flex-row x-center">
+          <mat-spinner diameter="40" ></mat-spinner>
+        </div>
+      } @else {
+        <div class="grid-2-1 gap-10" >
+          <mat-form-field appearance="outline" >
+            <mat-label>Nome do questionário</mat-label>
+            <input 
+              type="text" 
+              matInput 
+              maxlength="255" 
+              formControlName="name"
+              autofocus
+              placeholder="e.g. Consulta Eleitoral 2024" />
 
-          @if (name.hasError("required")) {
-            <mat-error>Crie um nome para o questionário</mat-error>
-          }
+            @if (name.hasError("required")) {
+              <mat-error>Crie um nome para o questionário</mat-error>
+            }
+        
+            @if (name.hasError("maxLength")) {
+              <mat-error>O nome deve ter no máximo 255 caracteres.</mat-error>
+            }
+          </mat-form-field>
       
-          @if (name.hasError("maxLength")) {
-            <mat-error>O nome deve ter no máximo 255 caracteres.</mat-error>
-          }
-        </mat-form-field>
-    
-        <mat-form-field appearance="outline" >
-          <mat-label>Data de Expiração</mat-label>
-          <input 
-            matInput 
-            [matDatepicker]="picker1" 
-            formControlName="expirationDate" 
-            autocomplete="off" 
-            readonly />
-          <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
-          <mat-datepicker #picker1 disabled="false" ></mat-datepicker>
-        </mat-form-field>
-      </div>
+          <mat-form-field appearance="outline" >
+            <mat-label>Data de Expiração</mat-label>
+            <input 
+              matInput 
+              [matDatepicker]="picker1" 
+              formControlName="expirationDate" 
+              autocomplete="off" 
+              readonly />
+            <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1 disabled="false" ></mat-datepicker>
+          </mat-form-field>
+        </div>
 
-      <div>
-        <mat-slide-toggle formControlName="isActive" >Questionário ativo</mat-slide-toggle>
-      </div>
+        <div>
+          <mat-slide-toggle formControlName="isActive" >Questionário ativo</mat-slide-toggle>
+        </div>
 
-      @if (!surveyId.value) {
-        <button type="submit" mat-flat-button color="primary" >
-          <mat-icon>save</mat-icon>
-          Criar Questionário
-        </button>
+        @if (!surveyId.value) {
+          <button type="submit" mat-flat-button color="primary" >
+            <mat-icon>save</mat-icon>
+            Criar Questionário
+          </button>
+        }
       }
     </form>
 

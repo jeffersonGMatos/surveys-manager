@@ -5,9 +5,13 @@
 
 html, body { height: 100% }
 body, .app-body {
-  background-color: #f5f5f5;
+  background-color: #f3f3f3;
 }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.default-size {
+  width: 800px;
+}
 
 .flex-row {
   display: flex;
@@ -17,6 +21,12 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .flex-column{
   display: flex;
   flex-direction: column;
+}
+.flex-column.x-center{
+  align-items: center;
+}
+.flex-column.y-center{
+  justify-content: center;
 }
 
 .flex-row.x-center {

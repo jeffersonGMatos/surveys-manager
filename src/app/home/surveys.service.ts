@@ -45,7 +45,8 @@ export class SurveysService {
 
     const survey = {
       name: data.name,
-      expirationDate: `${data.expirationDate.getFullYear().toString()}-${(data.expirationDate.getMonth() + 1).toString().padStart(2, '0')}-${data.expirationDate.getDate().toString().padStart(2, '0')}`
+      expirationDate: `${data.expirationDate.getFullYear().toString()}-${(data.expirationDate.getMonth() + 1).toString().padStart(2, '0')}-${data.expirationDate.getDate().toString().padStart(2, '0')}`,
+      isActive: data.isActive
     };
 
     return this._http
@@ -94,7 +95,8 @@ export class SurveysService {
 
     const survey = {
       name: data.name,
-      expirationDate: `${data.expirationDate.getFullYear().toString()}-${(data.expirationDate.getMonth() + 1).toString().padStart(2, '0')}-${data.expirationDate.getDate().toString().padStart(2, '0')}`
+      expirationDate: `${data.expirationDate.getFullYear().toString()}-${(data.expirationDate.getMonth() + 1).toString().padStart(2, '0')}-${data.expirationDate.getDate().toString().padStart(2, '0')}`,
+      isActive: data.isActive
     };
 
     return this._http.put<Survey>(`${environment.api_host}/surveys/${data.surveyId}`, survey, { headers }).pipe(

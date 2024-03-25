@@ -3,6 +3,7 @@ import { environment } from "./utils/config";
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { BehaviorSubject, Observable, catchError, map, of } from "rxjs";
 import { WindowService } from "./window.service";
+import { User } from "./users/user";
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import { WindowService } from "./window.service";
 export class AppService {
   private _authJwt: string | null = null;
   private window = this.windowService.getWindow();
-  public user: BehaviorSubject<any> = new BehaviorSubject(null);
+  public user: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
   public appMessage: BehaviorSubject<any> = new BehaviorSubject(null);
 
   constructor(
@@ -85,7 +86,7 @@ export class AppService {
       map(response => {
         
         if (response !== false) {
-          this.user.next(response);
+          this.user.next(response as User);
           return true;
         } else {
           this.user.next(null);

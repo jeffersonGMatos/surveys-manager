@@ -1,15 +1,6 @@
-.app-body {
-  height: 100%;
-}
-.app-side-nav {
-  background-color: var(--bg-container);
-  border-radius: 20px;
-  margin: 8px;
-  margin-right: 0;
-}
-
-.side-nav-list {
-  width: 200px;
+h1 {
+  font-size: 18px;
+  font-weight: 500;
 }
 
 .window-content {
@@ -20,8 +11,4 @@
 
 .window-padding {
   padding: 27px;
-}
-
-.default-size {
-  width: 800px;
 }

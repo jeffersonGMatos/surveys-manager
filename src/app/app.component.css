@@ -1,0 +1,8 @@
+.app-header {
+  width: 100%;
+  background-color: #3f51b5;
+}
+.app-header-content {
+  color: #f0f0f0;
+  height: 60px;
+}

@@ -1,1 +1,26 @@
-<router-outlet></router-outlet>
+<div class="app-body flex-column gap-10">
+  @if (user$ | async) {
+  <header class="app-header flex-row x-center">
+    <div class="app-header-content default-size flex-row x-space-between y-center">
+      <span>Olá, {{(user$|async)!.name}}</span>
+      <div class="flex-row gap-10">
+        <button mat-button (click)="showSurveys()" >
+          <mat-icon>checkbook</mat-icon>
+          Enquetes
+        </button>
+        
+        <button mat-button (click)="showUsers()" >
+          <mat-icon>manage_accounts</mat-icon>
+          Usuários
+        </button>
+
+        <button mat-button >
+          <mat-icon>logout</mat-icon>
+          Sair
+        </button>
+      </div>
+    </div>
+  </header>
+  }
+  <router-outlet></router-outlet>
+</div>

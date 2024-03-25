@@ -68,8 +68,15 @@
               <p class="text-center mat-small" >Nenhuma alternativa foi cadastrada</p>
             }
 
+            @if (isLoadingQuestionOption) {
+              <div class="flex-row x-center">
+                <mat-spinner diameter="30" ></mat-spinner>
+              </div>
+              <br/> 
+            }
+
             <div class="text-center" >
-              <button mat-stroked-button color="primary" (click)="addResponse(control)">
+              <button mat-stroked-button color="primary" (click)="addResponse(control)" [disabled]="isLoadingQuestionOption" >
                 <mat-icon>add</mat-icon>
                 Criar Alternativa
               </button>

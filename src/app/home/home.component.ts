@@ -18,7 +18,7 @@ import { firstValueFrom } from 'rxjs';
     MatIconModule
   ],
   templateUrl: './home.component.html',
-  styleUrls: ['../screen.css', './home.component.css']
+  styleUrls: ['../screen.css']
 })
 export class HomeComponent implements OnInit {
   displayedColumns: string[] = ['name', 'expirationDate', 'isActive', 'surveyId'];
