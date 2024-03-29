@@ -1,0 +1,47 @@
+<div class="flex-column gap-18 x-center">
+  <form 
+    class="default-size window-content window-padding flex-column gap-18" 
+    [formGroup]="userForm" 
+    (submit)="onSubmit($event)" >
+    
+    <div class="flex-row x-space-between" >
+      <button type="button" mat-button color="primary" (click)="back()" >
+        <mat-icon>arrow_back</mat-icon>
+        Voltar
+      </button>
+
+      @if (userId.value) {
+        <button mat-flat-button color="warn" type="button" (click)="deleteUser()" >
+          <mat-icon>delete</mat-icon>
+          Excluir Usuário
+        </button>
+      }
+    </div>
+
+    @if (isLoading) {
+      <div class="flex-row x-center">
+        <mat-spinner diameter="40" ></mat-spinner>
+      </div>
+    } @else {
+      <p> Agrupar por</p>
+      <mat-radio-group 
+        class="flex-row gap-18"
+        formControlName="profile" 
+        aria-label="Selecione uma opção">
+        <mat-radio-button value="adm">Pessoa</mat-radio-button>
+        <mat-radio-button value="agt">Agente</mat-radio-button>
+      </mat-radio-group>
+
+      <!--
+      <div>
+        <mat-slide-toggle formControlName="isActive" >Usuário ativo</mat-slide-toggle>
+      </div>
+      -->
+
+      <button type="submit" mat-flat-button color="primary" >
+        <mat-icon>save</mat-icon>
+        Criar Usuário
+      </button>
+    }
+  </form>
+</div>

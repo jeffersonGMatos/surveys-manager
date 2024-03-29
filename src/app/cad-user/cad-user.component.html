@@ -105,7 +105,7 @@
 
       <button type="submit" mat-flat-button color="primary" >
         <mat-icon>save</mat-icon>
-        Criar Usuário
+        {{this.userId.value ? 'Alterar Usuário' : 'Criar Usuário'}}
       </button>
     }
   </form>

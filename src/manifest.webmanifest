@@ -1,6 +1,6 @@
 {
-  "name": "surveys-manager",
-  "short_name": "surveys-manager",
+  "name": "Painel de Controle",
+  "short_name": "Painel de Controle",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",

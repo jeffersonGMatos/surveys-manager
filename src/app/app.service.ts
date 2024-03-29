@@ -43,6 +43,12 @@ export class AppService {
     }
   }
 
+  logout() {
+    this.authJwt = null;
+    this.user.next(null);
+    this.window.localStorage.clear();
+  }
+
   public login({username, password}: any): Observable<any> {
     const auth = this.window.btoa(`${username}:${password}`);
 
@@ -51,7 +57,7 @@ export class AppService {
       "Content-type": "application/json"
     });
 
-    return this._http.post(`${environment.api_host}/public/auth`, {}, {headers}).pipe(
+    return this._http.post(`${environment.api_host_login}/auth`, {}, {headers}).pipe(
       catchError((err: HttpErrorResponse) => 
         of({
           ok: false,

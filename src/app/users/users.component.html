@@ -54,6 +54,12 @@
         <p>Nenhum usuário foi encontrado</p>
       </div>
     }
+
+    @if (isSearching) {
+      <div class="flex-row x-center">
+        <mat-spinner diameter="40" ></mat-spinner>
+      </div>
+    }
   </div>  
   
   <button mat-flat-button color="primary" (click)="showUser('add')" >

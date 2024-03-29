@@ -42,7 +42,7 @@ export class CadUserComponent {
     userId: new FormControl<string | null>(null),
     name: new FormControl('', [Validators.required, Validators.maxLength(255)]),
     username: new FormControl<string>('', Validators.required),
-    password: new FormControl<string>("", Validators.required),
+    password: new FormControl<string>(""),
     profile: new FormControl<string>("", Validators.required)
   })
 
@@ -91,8 +91,6 @@ export class CadUserComponent {
       //isActive: user.isActive == 'S'
     });
 
-    console.log(user);
-
     this.isLoading = false;
   }
 
@@ -116,19 +114,23 @@ export class CadUserComponent {
     if (value.userId)
       this.updateUser({
         //isActive: value.isActive ? 'S' : 'N',
+        userId: value.userId,
         name: value.name,
-        password: value.password,
         username: value.username,
         profile: value.profile,
       } as User);
-    else
-      this.createUser({
-        //isActive: value.isActive ? 'S' : 'N',
-        name: value.name,
-        username: value.username,
-        password: value.password,
-        profile: value.profile,
-      } as User);
+    else {
+      if (!value.password || (value.password && value.password?.length == 0)) {
+        this.password.setErrors({required: true});
+      } else
+        this.createUser({
+          //isActive: value.isActive ? 'S' : 'N',
+          name: value.name,
+          username: value.username,
+          password: value.password,
+          profile: value.profile,
+        } as User);
+    }
   }
 
   async deleteUser() {

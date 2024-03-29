@@ -8,6 +8,7 @@ import { User, UserRoles, userRolesDescription } from "./user";
 import { Router } from "@angular/router";
 import { firstValueFrom, Observable } from 'rxjs';
 import { AppService } from "../app.service";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 @Component({
   standalone: true,
@@ -17,7 +18,8 @@ import { AppService } from "../app.service";
     MatTableModule,
     DatePipe,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './users.component.html',
   styleUrls: ['../screen.css']
@@ -25,7 +27,7 @@ import { AppService } from "../app.service";
 export class UsersComponent implements OnInit {
   displayedColumns: string[] = ['name', 'username', 'profile', 'userId'];
   data: User[] = [];
-  isSearching = false;
+  isSearching = true;
   
   readonly userRolesDescription: any = userRolesDescription
   readonly UserRoles = UserRoles
@@ -46,6 +48,7 @@ export class UsersComponent implements OnInit {
 
   async getUsers() {
     this.data = await firstValueFrom(this.usersService.getUsers());
+    this.isSearching = false;
   }
 
   ngOnInit() {

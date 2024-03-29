@@ -59,7 +59,7 @@ export class UsersService {
       profile: data.profile
     };
 
-    return this._http.put<User>(`${environment.api_host}/user/${data.userId}`, user, { headers }).pipe(
+    return this._http.put<User>(`${environment.api_host}/users/${data.userId}`, user, { headers }).pipe(
       catchError(this.appService.handleError(undefined))
     )
   }

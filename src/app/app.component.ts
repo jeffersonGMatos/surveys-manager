@@ -21,7 +21,7 @@ export class AppComponent {
   readonly user$
 
   constructor(
-    appService: AppService,
+    private appService: AppService,
     private router: Router
   ) {
     this.user$ = appService.user.asObservable()
@@ -34,6 +34,11 @@ export class AppComponent {
 
   public showSurveys() {
     this.router.navigate(['']);
+  }
+
+  logout() {
+    this.appService.logout();
+    this.router.navigate(['logout']);
   }
 
 }
