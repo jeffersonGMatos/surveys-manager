@@ -111,7 +111,7 @@ export class CadUserComponent {
   }
 
   openSnackBar(message: string) {
-    this._snackBar.open(message);
+    this._snackBar.open(message, "Ok");
   }
 
   private async saveUser() {
@@ -123,6 +123,7 @@ export class CadUserComponent {
         userId: value.userId,
         name: value.name,
         username: value.username,
+        password: value.password,
         profile: value.profile,
       } as User);
     else {

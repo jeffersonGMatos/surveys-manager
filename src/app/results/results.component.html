@@ -66,14 +66,20 @@
               </tbody>
             </table>
           }
+
+          <table>
+            <tr>
+              <td>Total Geral:</td>
+              <td>{{survey.total}}</td>
+            </tr>
+          </table>
         }
-        <!--
         @if (groupBy && groupBy == 'neighborhood') {
           @for(question of survey.questions; track question.questionId) {
             <table class="tb-result" cellpadding="0" cellspacing="0">
               <thead>
                 <tr>
-                  <th colspan="2" >{{question.description}} ({{show === "count" ? "Qtd" : "%"}}) </th>
+                  <th colspan="2" >{{question.description}} ({{show.value === 0 ? "Qtd" : "%"}}) </th>
                 </tr>
               </thead>
               <tbody>
@@ -82,28 +88,44 @@
                     <td colspan="2"><strong>{{option.description}}</strong></td>
                   </tr>
                   
-                  @for(group of groupByData; track group) {
+                  @for(group of getGroupByData(question); track group) {
                     <tr>
-                      <td>{{group.value}}</td>
-                      <td width="50" >{{getData(option.optionId, group)}}</td>
+                      <td>{{group}}</td>
+                      <td width="50" >{{option.results[group][show.value]}}</td>
                     </tr>
                   }
                 }
               </tbody>
             </table>
           }
+
+          <table>
+            <tr>
+              <td>Total Geral:</td>
+              <td>{{survey.total}}</td>
+            </tr>
+            @for(group of survey.groupTotal; track group) {
+              <tr>
+                <td>{{group["neighborhood"]}}</td>
+                <td>{{group.count}}</td>
+              </tr>
+            }
+          </table>
         }
+        
         @if (groupBy && groupBy !== 'neighborhood') {
           @for(question of survey.questions; track question.questionId) {
             <table class="tb-result" cellpadding="0" cellspacing="0">
               <thead>
                 <tr>
-                  <th [colSpan]="groupByData.length + 1" >{{question.description}} ({{show === "count" ? "Qtd" : "%"}})</th>
+                  <th [colSpan]="getGroupByData(question).length + 1" >
+                    {{question.description}} ({{show.value === 0 ? "Qtd" : "%"}})
+                  </th>
                 </tr>
                 <tr>
                   <th>Candidato</th>
-                  @for(group of groupByData; track group) {
-                    <th width="100" >{{group.value}}</th>
+                  @for(group of getGroupByData(question); track group) {
+                    <th width="100" >{{group}}</th>
                   }
                 </tr>
               </thead>
@@ -111,16 +133,29 @@
                 @for(option of question.options; track option.optionId) {
                   <tr>
                     <td>{{option.description}}</td>
-                    @for(group of groupByData; track group) {
-                      <td  align="right" >{{getData(option.optionId, group)}}</td>
+                    @for(group of getGroupByData(question); track group) {
+                      <td >{{option.results[group][show.value]}}</td>
                     }
                   </tr>
                 }
               </tbody>
             </table>
           }
+
+          <table>
+            <tr>
+              <td>Total Geral:</td>
+              <td>{{survey.total}}</td>
+            </tr>
+            @for(group of survey.groupTotal; track group) {
+              <tr>
+                <td>{{group[groupBy == "age" ? "agegroup" : groupBy]}}</td>
+                <td>{{group.count}}</td>
+              </tr>
+            }
+          </table>
         }
-        -->
+        
       }   
     }
   </div>

@@ -65,7 +65,7 @@ export class LoginComponent {
     if (redirect)
       this.router.navigateByUrl(redirect)
     else
-      this.router.navigate(['home'])
+      this.router.navigate(['/'])
   }
 
   public onSubmit(ev: SubmitEvent) {

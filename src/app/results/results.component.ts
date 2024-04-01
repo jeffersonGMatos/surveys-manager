@@ -54,11 +54,15 @@ export class ResultsComponent {
     if (surveyId) {
       this.groupBy = (this.resultsForm.get('groupBy') as FormControl<string | null>).value;
       this.survey = await firstValueFrom(this.surveysService.getReport(surveyId, this.resultsForm.value));
-      console.log(this.survey);
+      console.log(this.groupBy, this.survey);
     }
 
     this.isLoading = false;
     this.cdr.detectChanges();
+  }
+
+  public getGroupByData(question: any): string[] {
+    return Object.keys(question.options[0].results)
   }
 
   back() {
