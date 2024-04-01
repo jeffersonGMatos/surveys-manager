@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { AppService } from "../app.service";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Observable, catchError, map } from "rxjs";
 import { Survey } from "./survey";
 import { environment } from "../utils/config";
@@ -23,6 +23,12 @@ export class SurveysService {
     )
   }
 
+  public getSurveyNeighborhood(surveyId: string, text: string): Observable<any[]> {
+    return this._http.get<Survey[]>(`${environment.api_host}/surveys/${surveyId}/neighborhoods?text=${text}`).pipe(
+      catchError(this.appService.handleError([]))
+    )
+  }
+
   public getSurvey(surveyId: string): Observable<Survey | undefined> {
     return this._http.get<any>(`${environment.api_host}/surveys/${surveyId}`).pipe(
       catchError(this.appService.handleError(undefined)),
@@ -35,6 +41,12 @@ export class SurveysService {
 
         return undefined
       })
+    )
+  }
+
+  public getReport(surveyId: string, query: any): Observable<any[]> {
+    return this._http.get<any>(`${environment.api_host}/reports/${surveyId}?groupBy=${query.groupBy}`).pipe(
+      catchError(this.appService.handleError([]))
     )
   }
 

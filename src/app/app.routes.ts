@@ -5,6 +5,7 @@ import { LoginComponent } from './login/login.component';
 import { CadSurveyComponent } from './survey/cad-survey.component';
 import { UsersComponent } from './users/users.component';
 import { CadUserComponent } from './cad-user/cad-user.component';
+import { ResultsComponent } from './results/results.component';
 
 export const routes: Routes = [
   {
@@ -15,6 +16,11 @@ export const routes: Routes = [
   {
     path: 'surveys/:id',
     component: CadSurveyComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'reports/:id',
+    component: ResultsComponent,
     canActivate: [authGuard]
   },
   {

@@ -35,6 +35,10 @@ export class HomeComponent implements OnInit {
     this.router.navigate([`surveys/${id}`])
   }
 
+  showReport(id: string) {
+    this.router.navigate([`reports/${id}`])
+  }
+
   async getSurveys() {
     this.data = await firstValueFrom(this.surveysService.getSurveys());
   }

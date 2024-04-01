@@ -14,7 +14,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { User, UserRoles } from "../users/user";
 import { UsersService } from "../users/users.service";
-
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   templateUrl: 'cad-user.component.html',
@@ -37,6 +37,7 @@ import { UsersService } from "../users/users.service";
 export class CadUserComponent {
   public isLoading = true;
   public isPasswordVisible = false
+  
   
   userForm = new FormGroup({
     userId: new FormControl<string | null>(null),
@@ -71,7 +72,8 @@ export class CadUserComponent {
   constructor(
     private usersService: UsersService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private _snackBar: MatSnackBar
   ) {}
 
   private async getUser(userId: string) {
@@ -106,6 +108,10 @@ export class CadUserComponent {
 
     if (user)
       this.router.navigate([`users/${user.userId}`], {onSameUrlNavigation: "reload"});
+  }
+
+  openSnackBar(message: string) {
+    this._snackBar.open(message);
   }
 
   private async saveUser() {
@@ -144,12 +150,13 @@ export class CadUserComponent {
     this.router.navigate(['/users'])
   }
 
-  onSubmit(ev: SubmitEvent) {
+  async onSubmit(ev: SubmitEvent) {
     ev.preventDefault();
     
-    if (this.userForm.valid)
-      Promise.resolve(this.saveUser())
-    else
+    if (this.userForm.valid) {
+      await Promise.resolve(this.saveUser());
+      this.openSnackBar("Salvo com sucesso");
+    } else
       this.userForm.markAllAsTouched()
   }
 

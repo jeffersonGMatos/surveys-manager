@@ -1,0 +1,12 @@
+.tb-result {
+  border-collapse: collapse;
+  min-width: 600px;
+
+}
+.tb-result thead {
+  background-color: #f0f0f0;
+}
+.tb-result td, .tb-result th {
+  border: solid #000000 1px;
+  padding: 5px;
+}
