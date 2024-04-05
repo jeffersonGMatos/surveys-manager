@@ -15,11 +15,11 @@ registerLocaleData(localePt, "pt-br")
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes), 
+    provideRouter(routes),
     provideServiceWorker('ngsw-worker.js', {
         enabled: !isDevMode(),
         registrationStrategy: 'registerWhenStable:30000'
-    }), 
+    }),
     provideClientHydration(), 
     provideAnimationsAsync(),
     provideHttpClient(withInterceptors([AuthInterceptor])),
