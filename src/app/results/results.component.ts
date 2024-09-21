@@ -8,7 +8,6 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { Survey } from "../home/survey";
 import { CommonModule } from "@angular/common";
 
 @Component({
